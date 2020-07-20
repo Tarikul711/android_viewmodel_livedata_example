@@ -13,12 +13,16 @@ import com.tos.retrofitokhttpcaching.network.APIService;
 import com.tos.retrofitokhttpcaching.network.RootUrl;
 import com.tos.retrofitokhttpcaching.network.WebInterface;
 import com.tos.retrofitokhttpcaching.model.photo.PhotoData;
+import com.tos.retrofitokhttpcaching.viewModel.PhotoListViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -29,16 +33,18 @@ public class PhotoActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
     RecyclerView recyclerView;
-    private WebInterface webInterface;
     Context context;
     private static final String TAG = "PhotoActivity";
+    PhotoListViewModel viewModel;
+    PhotoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-        webInterface = APIService.createService(WebInterface.class, RootUrl.BASE_URL_PHOTO);
+        viewModel = new ViewModelProvider(this).get(PhotoListViewModel.class);
+        viewModel.init();
         initView();
 
     }
@@ -46,33 +52,15 @@ public class PhotoActivity extends AppCompatActivity {
     public void initView() {
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
-        webInterface.getPhotoData()
-                .enqueue(new Callback<List<PhotoData>>() {
-                    @Override
-                    public void onResponse(@NotNull Call<List<PhotoData>> call, @NotNull Response<List<PhotoData>> response) {
-                        if (response.raw().networkResponse() != null) {
-                            Log.d(TAG, "onResponse: response is from NETWORK...");
-                        } else if (response.raw().cacheResponse() != null
-                                && response.raw().networkResponse() == null) {
-                            Log.d(TAG, "onResponse: response is from CACHE...");
-                        }
 
-                        if (response.code() == 200) {
-                            progressBar.setVisibility(View.GONE);
-                            List<PhotoData> postData = response.body();
-                            PhotoAdapter adapter = new PhotoAdapter(context, postData);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                            recyclerView.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(@NotNull Call<List<PhotoData>> call, @NotNull Throwable t) {
+        viewModel.getPhotos().observe(this, photoData -> {
+            progressBar.setVisibility(View.GONE);
+            adapter = new PhotoAdapter(context, photoData);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(adapter);
 
-                    }
-                });
+        });
     }
 
 }
