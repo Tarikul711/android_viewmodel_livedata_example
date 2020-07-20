@@ -1,4 +1,4 @@
-package com.tos.retrofitokhttpcaching.activity;
+package com.tos.retrofitokhttpcaching.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,13 +8,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.tos.retrofitokhttpcaching.R;
-import com.tos.retrofitokhttpcaching.adapter.PhotoAdapter;
-import com.tos.retrofitokhttpcaching.adapter.PostAdapter;
-import com.tos.retrofitokhttpcaching.webapi.APIService;
-import com.tos.retrofitokhttpcaching.webapi.RootUrl;
-import com.tos.retrofitokhttpcaching.webapi.WebInterface;
-import com.tos.retrofitokhttpcaching.webapi.photo.PhotoData;
-import com.tos.retrofitokhttpcaching.webapi.post.PostData;
+import com.tos.retrofitokhttpcaching.ui.adapter.PhotoAdapter;
+import com.tos.retrofitokhttpcaching.network.APIService;
+import com.tos.retrofitokhttpcaching.network.RootUrl;
+import com.tos.retrofitokhttpcaching.network.WebInterface;
+import com.tos.retrofitokhttpcaching.model.photo.PhotoData;
 
 import org.jetbrains.annotations.NotNull;
 
