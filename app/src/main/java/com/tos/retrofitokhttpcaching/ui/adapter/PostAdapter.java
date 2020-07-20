@@ -31,7 +31,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
         return new ViewHolder(v);
     }
 
@@ -39,13 +39,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PostData item = items.get(position);
-
         holder.tvText.setText(item.getTitle());
-        holder.ivImage.setVisibility(View.GONE);
-       /* Glide.with(context)
-                .load(item.getUrl())
-                .into(holder.ivImage);*/
-        holder.ivImage.setTag(item);
+        holder.tvText.setTag(item);
     }
 
     @Override
@@ -56,11 +51,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
         AppCompatTextView tvText;
-        AppCompatImageView ivImage;
 
         ViewHolder(View itemView) {
             super(itemView);
-            ivImage = itemView.findViewById(R.id.ivImage);
             tvText = itemView.findViewById(R.id.tvText);
 
         }
